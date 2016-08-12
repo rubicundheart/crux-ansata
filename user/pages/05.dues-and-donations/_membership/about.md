@@ -1,5 +1,5 @@
 <h2>Membership with Crux Ansata Oasis</h2>
-<ul>
+<ul class="circle">
   <li>Initiate Members are eligible to become Officers of the Oasis as well as other roles, including Priest, Priestess, Deacon, or Initiation Officers.</li>
   <li>All Members and Affiliates may attend all private events that are not degree-specific.</li>
   <li>All Members and Affiliates are able to borrow books from our Oasis Library.</li>
