@@ -2,6 +2,8 @@
 title: Home
 ---
 
+<script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script><script type="text/javascript">require(["mojo/signup-forms/Loader"], function(L) { L.start({"baseUrl":"mc.us13.list-manage.com","uuid":"2cf9a968d70230ef789606d7f","lid":"d665f91ec7"}) })</script>
+
 # Grav is Running!
 ## You have installed **Grav** successfully
 
