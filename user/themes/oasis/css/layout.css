@@ -1044,9 +1044,15 @@ footer .social-links li:first-child { margin-left: 0; }
 .dues-table td, .dues-table th, .library-table td, .library-table th {
   padding: 5px 10px;
 }
+
+.library-table tbody tr:nth-child(odd) {
+   background-color: #ccc;
+}
+
 .dues-table .degree {
   text-align: right;
 }
+
 .dues-table .amount {
   text-align: center;
 }
