@@ -1041,7 +1041,7 @@ footer .social-links li:first-child { margin-left: 0; }
 /* j. Custom CSS
 /* ------------------------------------------------------------------ */
 
-.dues-table td, .dues-table th {
+.dues-table td, .dues-table th, .library-table td, .library-table th {
   padding: 5px 10px;
 }
 .dues-table .degree {
