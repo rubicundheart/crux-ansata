@@ -1,6 +1,12 @@
 ---
 title: 'Publications'
+onpage_menu: false
 content:
-    items: '@self.descendants'
+    items: @self.modular
+    order:
+        by: default
+        dir: asc
+        custom:
+            - _montes-magicales
+            - _oasis-library
 ---
-<h1>Publications</h1>
