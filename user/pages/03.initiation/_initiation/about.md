@@ -1,3 +1,4 @@
+<h2>Initiation</h2>
 <p>Initiation into Mysteria Mystica Maxima <span>(M&there4;M&there4;M&there4;)</span> is the way in which most individuals join Ordo Templi Orientis. With the initiation rituals we strive to impart unteachable knowledge through the use of symbolism and allegory so that the candidate may better learn whom they really are.</p>
 <p>Applying for initiation is a fairly straightforward process.  To become an initiate member one simply has to request an application, fill it out&mdash;including the signatures of two sponsors already in the order&mdash;and then turn it in. Securing the two sponsorship signatures is usually the toughest part.  The best way to make that happen is to get to know local members at our events.</p>
 <p>Upon receiving a completed application, the initiation date will then be scheduled and put on the calendar.  In other words, you needn’t and shouldn’t wait for initiations to be scheduled before requesting an application.</p>
