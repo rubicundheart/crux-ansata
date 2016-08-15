@@ -1042,10 +1042,10 @@ footer .social-links li:first-child { margin-left: 0; }
 /* ------------------------------------------------------------------ */
 
 .dues-table td, .dues-table th {
-  padding: 10px;
+  padding: 5px 10px;
 }
 .dues-table .degree {
-  text-align: left;
+  text-align: right;
 }
 .dues-table .amount {
   text-align: center;
