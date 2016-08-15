@@ -1,3 +1,0 @@
----
-title: 'Ecclesiastical Rites'
----
