@@ -7,7 +7,7 @@ sections:
         - title: View our Calendar
           info: <a href="https://calendar.google.com/calendar/embed?src=cruxansata.oto%40gmail.com&ctz=America/Denver" target="_blank">Google Calendar</a>
           date: Updated regularly
-          description: Our monthly event calendar can be found here.
+          description: <a href="/events">See more Events&hellip;</a>
     - title: Upcoming Events
       css_class: upcoming
       items:
@@ -24,5 +24,3 @@ sections:
           info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
           date: September 10th, 2016 6:30pm - 8:30pm
 ---
-
-<a href="/events">See more Events&hellip;</a>
