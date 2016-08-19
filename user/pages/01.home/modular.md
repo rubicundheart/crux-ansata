@@ -8,8 +8,9 @@ content:
         by: default
         dir: asc
         custom:
-            - _events
             - _about
+            - _events
+
 ---
 <a href="#" id="open-mc-popup" onclick ="showMailingPopUp(); return false;">Sign up for newsletter!</a>
 <!-- MAILCHIMP MODAL FORM -->
