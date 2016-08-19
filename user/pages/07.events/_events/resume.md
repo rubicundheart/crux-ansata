@@ -5,7 +5,7 @@ sections:
       css_class: calendar
       items:
         - title: View our Calendar
-          info: <a href="https://calendar.google.com/calendar/embed?src=cruxansata.oto%40gmail.com&ctz=America/Denver" target="_blank">Google Calendar</a>
+          info: <a href="https://calendar.google.com/calendar/embed?src=cruxansata.oto%40gmail.com&ctz=America/Denver" target="_blank" id="about">Google Calendar</a>
           date: Updated regularly
           description: Our monthly event calendar can be found here.
     - title: Upcoming Events
