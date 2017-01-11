@@ -11,9 +11,6 @@ sections:
     - title: Upcoming Events
       css_class: upcoming
       items:
-        - title: Quarterly Oasis Meeting
-          info: Private
-          date: January 8th, 2017  
         - title: Gnostic Mass
           info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
           date: January 14th, 2017 6:30pm - 8:30pm
@@ -30,6 +27,9 @@ sections:
     - title: Past Events
       css_class: past
       items:
+        - title: Quarterly Oasis Meeting
+          info: Private
+          date: January 8th, 2017  
         - title: Ritual of the Elements and Feast of the Times
           info: Thelemic Holiday
           date: December 21st, 2016 7pm - 9pm
