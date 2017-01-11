@@ -11,16 +11,19 @@ sections:
     - title: Upcoming Events
       css_class: upcoming
       items:
-        - title: Gnostic Mass Workshop
-          info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
-          date: August 27th, 1pm - 3:30pm
-        - title: Pagan Pride
-          info: <a href="https://goo.gl/maps/sbYYFqwt27A2" target="_blank">Civic Center Park</a>
-          date: August 28th, 11am - 4pm
-        - title: Meet Our Oasis Master
-          info: <a href="https://goo.gl/maps/mDRCJu3Eq792" target="_blank">Atomic Cowboy</a>
-          date: September 2nd, 2016 6:30pm - 8:30pm
+        - title: Quarterly Oasis Meeting
+          info: Private
+          date: January 8th, 2017  
         - title: Gnostic Mass
           info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
-          date: September 10th, 2016 6:30pm - 8:30pm
+          date: January 14th, 2017 6:30pm - 8:30pm
+        - title: Gnostic Mass
+          info: Private
+          date: January 28th, 2017
+        - title: Minerval Application Deadline
+          info: Private
+          date: January 31st, 2017
+        - title: 1&deg; Application Deadline
+          info: Private
+          date: January 31st, 2017
 ---
