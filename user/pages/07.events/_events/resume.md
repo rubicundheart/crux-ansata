@@ -18,7 +18,7 @@ sections:
         - title: Spring Equinox Feast and Rituals
           info: Thelemic Holiday
           date: March 19th, 2017 5pm - 7pm
-          description: Please come for fellowship at the Oasis and celebration of the changing of the seasons. Bring a dish to share as we welcome in the Thelemic New Year.</p><p>We have 2 rituals for this feast, the ritual for the Feast for the Spring Equinox by IAO131, and the Supreme Ritual of the Invocation of Horus.</p><p>Email secretary@cruxansataoto.org with questions.</p><p>We hope to see you there!
+          description: Please come for fellowship at the Oasis and celebration of the changing of the seasons. Bring a dish to share as we welcome in the Thelemic New Year.</p><p>We have 2 rituals for this feast, the ritual for the Feast for the Spring Equinox by IAO131, and the Supreme Ritual of the Invocation of Horus.</p><p>Email <a href="mailto:secretary@cruxansata-oto.org">secretary@cruxansata-oto.org</a> with questions.</p><p>We hope to see you there!
         - title: Gnostic Mass
           info: Private
           date: March 25th, 2017
