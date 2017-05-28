@@ -1,5 +1,5 @@
 <h2>Montes Magicales</h2>
-<p>Physical copies can be ordered for a nominal fee&mdash;<a href="mailto:master@cruxansata-oto.org">email us</a> for more information.</p>
+<p>Physical copies can be ordered for a nominal fee&mdash;<a href="mailto:deputymaster@cruxansata-oto.org">email us</a> for more information.</p>
 <h4><a href="CA_MM_Vol1_No1.pdf">Montes Magicales Vol. 1, No. 1</a></h4>
 <ul class="circle">
   <li>Liber CI (Aleister Crowley), Pt. 1</li>
