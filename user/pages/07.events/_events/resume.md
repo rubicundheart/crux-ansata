@@ -26,7 +26,7 @@ sections:
         - title: Ritual of the Elements and Feast of the Times
           info: Thelemic Holiday
           date: June 20th, 2017
-         - title: Magick Class: I Ching - Modern Uses for an Ancient Oracle
+        - title: Magick Class: I Ching - Modern Uses for an Ancient Oracle
           info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
           date: May 28th, 2017 3:30pm - 5pm
           description: The I Ching, or Book of Changes, is one of the oldest books in the world, and has much to offer the modern occultist. In this class we will give a brief overview of the I Ching's history and development, from prehistoric China all the way to today's English translations, as well as a survey of Aleister Crowley's work with and development of the I Ching, in addition to touching on other related divinatory systems. We will discuss it's function as a moral code as well as its use in divination, and how these might be interpreted in the context of New Aeon.</p><p>Suggested donation $5
