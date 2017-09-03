@@ -11,18 +11,6 @@ sections:
     - title: Upcoming Events
       css_class: upcoming
       items:
-        - title: Crux Ansata at NOTOCON
-          info: <a href="http://xi.notocon.org/" target="_blank">NOTOCON XI: For the chance of union</a>
-          date: August 11th - 13th, 2017
-          description: No mass this weekend due to NOTOCON!
-        - title: Gnostic Mass
-          info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
-          date: August 26th, 2017 6:30pm - 8:30pm
-          description:  Come join us for our public performance of Liber XV, The Gnostic Mass.  This ritual is the central rite, both public and private, of the Ordo Templi Orientis.  It is a participatory ritual, meaning that all attendees are expected to take part.  The full script of the ritual can be found <a href="http://lib.oto-usa.org/libri/liber0015.html">here</a>.</p><p>We will begin at 7:00, so we ask that everyone arrives between 6:30 and 6:45 in order to be included in the headcount.</p>A quick reminder: we ask that nobody bring food, drinks, or vape-pens into the temple-space nor into the waiting room.
-        - title: Dress to Kill: How to Wardrobe like a Thelemite
-          info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
-          date: August 27th, 2017 3pm - 5pm
-          description: In this presentation, Derek will walk us through how to use clothing--the most visible part of our personality--as a magickal weapon.</p><p>This presentation is public. $5 donation suggested
         - title: Growing the Magician: Creating and Living the Organic Magical Life
           info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
           date: September 3rd, 2017 3pm - 5:30pm
@@ -31,9 +19,32 @@ sections:
           info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
           date: September 9th, 2017 6:30pm - 8:30pm
           description:  Come join us for our public performance of Liber XV, The Gnostic Mass.  This ritual is the central rite, both public and private, of the Ordo Templi Orientis.  It is a participatory ritual, meaning that all attendees are expected to take part.  The full script of the ritual can be found <a href="http://lib.oto-usa.org/libri/liber0015.html">here</a>.</p><p>We will begin at 7:00, so we ask that everyone arrives between 6:30 and 6:45 in order to be included in the headcount.</p>A quick reminder: we ask that nobody bring food, drinks, or vape-pens into the temple-space nor into the waiting room.
+        - title: EGC Meeting
+          info: Location TBD
+          date: September 16th, 2017 4pm – 5:30pm
+          description: All Crux Ansata members that want to serve on a Mass team in first quarter 2017 should plan on attending. If unable to attend, please write an email with preferences (what you'd like to do, what you're willing to do, whom you'd prefer to work with, etc) to <a href="mailto:master@cruxansata-oto.org">master@cruxansata-oto.org</a>
+        - title: Ritual of the Elements and Feast of the Times
+          info: Thelemic Holiday
+          date: September 22nd, 2017
+        - title: Current 93 from Outer Space
+          info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
+          date: September 24th, 3pm – 5pm
+          description: An introduction to the writings of Kenneth Grant.</p><p>$5 suggested donation for non-members.
     - title: Past Events
       css_class: past
       items:
+        - title: Dress to Kill: How to Wardrobe like a Thelemite
+          info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
+          date: August 27th, 2017 3pm - 5pm
+          description: In this presentation, Derek will walk us through how to use clothing--the most visible part of our personality--as a magickal weapon.</p><p>This presentation is public. $5 donation suggested
+        - title: Gnostic Mass
+          info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
+          date: August 26th, 2017 6:30pm - 8:30pm
+          description:  Come join us for our public performance of Liber XV, The Gnostic Mass.  This ritual is the central rite, both public and private, of the Ordo Templi Orientis.  It is a participatory ritual, meaning that all attendees are expected to take part.  The full script of the ritual can be found <a href="http://lib.oto-usa.org/libri/liber0015.html">here</a>.</p><p>We will begin at 7:00, so we ask that everyone arrives between 6:30 and 6:45 in order to be included in the headcount.</p>A quick reminder: we ask that nobody bring food, drinks, or vape-pens into the temple-space nor into the waiting room.
+        - title: Crux Ansata at NOTOCON
+          info: <a href="http://xi.notocon.org/" target="_blank">NOTOCON XI: For the chance of union</a>
+          date: August 11th - 13th, 2017
+          description: No mass this weekend due to NOTOCON!
         - title: The Principle of Thelema in Satanism
           info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
           date: July 23th, 2017 3pm - 5pm
@@ -42,15 +53,4 @@ sections:
           info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
           date: July 15th, 2017 10am - 6pm
           description: Dann will be presenting MOE degree lectures on July 15th. He will start with Minerval & end with III, with about 90 minutes for each degree (1 hr presentation & 30 minute Q&A). We will start at 10am, cover Minerval & First, then break for lunch. The afternoon will be Second & Third. There will be a hard stop between each lecture to allow those not at the proper degree to leave. This event is open to all dues current initiates in good standing of the appropriate degree.</p><p>Bring your questions!
-        - title: Crux Ansata Quarterly Meeting
-          info: Private
-          date: July 9th, 2017 2pm - 4pm
-        - title: Gnostic Mass
-          info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
-          date: July 8th, 2017 6:30pm - 8:30pm
-          description:  Come join us for our public performance of Liber XV, The Gnostic Mass.  This ritual is the central rite, both public and private, of the Ordo Templi Orientis.  It is a participatory ritual, meaning that all attendees are expected to take part.  The full script of the ritual can be found <a href="http://lib.oto-usa.org/libri/liber0015.html">here</a>.</p><p>We will begin at 7:00, so we ask that everyone arrives between 6:30 and 6:45 in order to be included in the headcount.</p>A quick reminder: we ask that nobody bring food, drinks, or vape-pens into the temple-space nor into the waiting room.
-        - title: Magick Class: I Ching - Modern Uses for an Ancient Oracle
-          info: <a href="https://goo.gl/maps/T8prrX8Ma6q" target="_blank">9635 W. Colfax Avenue</a>
-          date: June 25th, 2017 3:30pm - 5pm
-          description: The I Ching, or Book of Changes, is one of the oldest books in the world, and has much to offer the modern occultist. In this class we will give a brief overview of the I Ching's history and development, from prehistoric China all the way to today's English translations, as well as a survey of Aleister Crowley's work with and development of the I Ching, in addition to touching on other related divinatory systems. We will discuss it's function as a moral code as well as its use in divination, and how these might be interpreted in the context of New Aeon.</p><p>Suggested donation $5
 ---
