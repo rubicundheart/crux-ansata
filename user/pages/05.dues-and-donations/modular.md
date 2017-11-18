@@ -11,6 +11,7 @@ content:
         custom:
             - _membership
             - _dues-and-donations
+            - _support-us
 ---
 <!-- MAILCHIMP MODAL FORM -->
  <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script>
