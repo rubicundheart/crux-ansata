@@ -4,7 +4,7 @@
 <p>Products with the Oasis lamen, as well as artwork created by local members.</p>
 <h3><a href="http://smile.amazon.com/ch/46-3921199" target="_blank" style="color: #11ABB0;">Amazon Smile (link)</a></h3>
 <p>Using Amazon to make eligible purchases generates money for Crux Ansata just by shopping via Amazon Smile. By clicking the link above, Amazon donates a portion of your purchases to the non-profit of your choice at no additional cost to you.</p>
-<p>Once you have followed this link, you only need to shop from <a href="https://smile.amazon.com/" target="_blank">smile.amazon.com</a> in the future, just make sure you see this in your browser as you shop.</p>
+<p>Once you have followed this link, you only need to shop from <a href="https://smile.amazon.com/" target="_blank">smile.amazon.com</a> in the future, whenever you see this in your browser as you shop.</p>
 <p><img src="/images/smile.jpg" style="display: inline; height: 200px; width: auto;"></p>
 <h3><a href="http://www.cruxansata-oto.org/events" target="_blank" style="color: #11ABB0;">Local Events (calendar)</a></h3>
 <p>Check out our other Crux Ansata and O.T.O. merch at any of our local events.</p>
