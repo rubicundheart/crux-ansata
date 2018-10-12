@@ -23,7 +23,7 @@ sections:
           info: <a href="https://goo.gl/maps/8mqptWoY6gn" target="_blank">305 S Kipling St, Lakewood, CO</a>
           date: November 10th-11th, 2018
           description: Initiation Training with S.G.I.G. Dionysus Rogers - Initiates of I&deg; and II&deg; may attend up to their current degree at the cost of $5 per degree (Minerval and I&deg; will cost $10, Minerval, I&deg; and II&deg; will cost $15). Cost will be $25 for III&deg;+.
-        - title: Initiator Training
+        - title: Fundraiser Open House and Silent Auction
           info: <a href="https://goo.gl/maps/8mqptWoY6gn" target="_blank">305 S Kipling St, Lakewood, CO</a>
           date: November 17, 2018
           description: TBD
