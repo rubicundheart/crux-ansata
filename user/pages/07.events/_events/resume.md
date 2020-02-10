@@ -16,9 +16,5 @@ sections:
           info: <a href="https://goo.gl/maps/8mqptWoY6gn" target="_blank">305 S Kipling St, Lakewood, CO</a>
           date: Fourth Sunday of the month, 3pm - 5pm
           description:  This presentation is welcome to the public. Class is $20 for non-members, $10 for members. 3pm arrival with a 3:30pm start time.
-        - title: Women's Discussion Group
-          info: <a href="https://goo.gl/maps/8mqptWoY6gn" target="_blank">305 S Kipling St, Lakewood, CO</a>
-          date: First & Third Monday of the month, 7pm - 9pm
-          description: This group is open to initiates and non-initiates, advanced magicians and magi-curious individuals, who are looking to connect with other women as well as gaining a deeper connection with yourself. We’ll provide a sacred space to engage with each other (and a variety of teas and snacks!), but we truly want to help facilitate whatever path the group wants to pursue.</p><p>Participation is open to all female folk—trans, cis, and gender non-conforming—regardless of their race, ethnic origin, age, sexual orientation, religion, disability, economic circumstance, or physical appearance. Crux Ansata is committed to providing an inclusive environment for all of our community members and to oppose ideas and doctrines–whether religious, political, philosophical, or pseudo-scientific–that tend toward the enslavement of the human spirit, which indwells “every man, every woman, and every intermediately-sexed individual.”</p>A $5 donation is suggested for non-members.
-          
+                 
 ---
