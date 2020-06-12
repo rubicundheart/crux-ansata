@@ -965,7 +965,7 @@ class Pages
         }
 
         foreach ($pages as $key => $info) {
-            $child = isset($this->instances[$key]) ? $this->instances[$key] : null;
+            $child = $this->instances[$key] ?? null;
             if (!$child) {
                 throw new \RuntimeException("Page does not exist: {$key}");
             }
@@ -976,9 +976,19 @@ class Pages
                     break;
                 case 'date':
                     $list[$key] = $child->date();
+                    $sort_flags = SORT_REGULAR;
                     break;
                 case 'modified':
                     $list[$key] = $child->modified();
+                    $sort_flags = SORT_REGULAR;
+                    break;
+                case 'publish_date':
+                    $list[$key] = $child->publishDate();
+                    $sort_flags = SORT_REGULAR;
+                    break;
+                case 'unpublish_date':
+                    $list[$key] = $child->unpublishDate();
+                    $sort_flags = SORT_REGULAR;
                     break;
                 case 'slug':
                     $list[$key] = $child->slug();
@@ -986,19 +996,28 @@ class Pages
                 case 'basename':
                     $list[$key] = basename($key);
                     break;
-                case (is_string($header_query[0])):
-                    $child_header = new Header((array)$child->header());
-                    $header_value = $child_header->get($header_query[0]);
-                    if ($header_value) {
-                        $list[$key] = $header_value;
-                    } else {
-                        $list[$key] = $header_default ?: $key;
-                    }
+                case 'folder':
+                    $list[$key] = $child->folder();
                     break;
                 case 'manual':
                 case 'default':
                 default:
-                    $list[$key] = $key;
+                    if (isset($header_query[0]) && is_string($header_query[0])) {
+                        $child_header = new Header((array)$child->header());
+                        $header_value = $child_header->get($header_query[0]);
+                        if (is_array($header_value)) {
+                            $list[$key] = implode(',', $header_value);
+                        } elseif ($header_value) {
+                            $list[$key] = $header_value;
+                        } else {
+                            $list[$key] = $header_default ?: $key;
+                        }
+                        $sort_flags = $sort_flags ?: SORT_REGULAR;
+                    } else {
+                        $list[$key] = $key;
+                        $sort_flags = $sort_flags ?: SORT_REGULAR;
+                    }
+
             }
         }
 
