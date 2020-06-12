@@ -46,7 +46,7 @@
         "test": "vendor/bin/codecept run unit",
         "test-windows": "vendor\\bin\\codecept run unit"
         "compile": [
-          "$ bin/gpm selfupgrade -f"
+          "bin/gpm selfupgrade -f"
         ]
     },
     "extra": {
