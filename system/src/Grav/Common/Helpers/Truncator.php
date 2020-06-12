@@ -1,12 +1,26 @@
 <?php
-namespace Grav\Common\Helpers;
-
-use DOMDocument;
 
 /**
- * This file is part of urodoz/truncateHTML.
+ * @package    Grav\Common\Helpers
  *
- * (c) Albert Lacarta <urodoz@gmail.com>
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
+ */
+
+namespace Grav\Common\Helpers;
+
+use DOMText;
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use DOMWordsIterator;
+use DOMLettersIterator;
+
+/**
+ * This file is part of https://github.com/Bluetel-Solutions/twig-truncate-extension
+ *
+ * Copyright (c) 2015 Bluetel Solutions developers@bluetel.co.uk
+ * Copyright (c) 2015 Alex Wilson ajw@bluetel.co.uk
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,181 +28,308 @@ use DOMDocument;
 
 class Truncator {
 
-    public static $default_options = array(
-        'ellipsis' => '…',
-        'break' => ' ',
-        'length_in_chars' => false,
-        'word_safe' => false,
-    );
+    /**
+     * Safely truncates HTML by a given number of words.
+     * @param  string  $html     Input HTML.
+     * @param  int     $limit    Limit to how many words we preserve.
+     * @param  string  $ellipsis String to use as ellipsis (if any).
+     * @return string            Safe truncated HTML.
+     */
+    public static function truncateWords($html, $limit = 0, $ellipsis = '')
+    {
+        if ($limit <= 0) {
+            return $html;
+        }
 
-    // These tags are allowed to have an ellipsis inside
-    public static $ellipsable_tags = array(
-        'p', 'ol', 'ul', 'li',
-        'div', 'header', 'article', 'nav',
-        'section', 'footer', 'aside',
-        'dd', 'dt', 'dl',
-    );
+        $doc = self::htmlToDomDocument($html);
+        $container = $doc->getElementsByTagName('div')->item(0);
+        $container = $container->parentNode->removeChild($container);
 
-    public static $self_closing_tags = array(
-        'br', 'hr', 'img',
-    );
+        // Iterate over words.
+        $words = new DOMWordsIterator($container);
+        $truncated = false;
+        foreach ($words as $word) {
+
+            // If we have exceeded the limit, we delete the remainder of the content.
+            if ($words->key() >= $limit) {
+
+                // Grab current position.
+                $currentWordPosition = $words->currentWordPosition();
+                $curNode = $currentWordPosition[0];
+                $offset = $currentWordPosition[1];
+                $words = $currentWordPosition[2];
+
+                $curNode->nodeValue = substr(
+                    $curNode->nodeValue,
+                    0,
+                    $words[$offset][1] + strlen($words[$offset][0])
+                );
+
+                self::removeProceedingNodes($curNode, $container);
+
+                if (!empty($ellipsis)) {
+                    self::insertEllipsis($curNode, $ellipsis);
+                }
+
+                $truncated = true;
+
+                break;
+            }
+
+        }
+
+        // Return original HTML if not truncated.
+        if ($truncated) {
+            $html = self::getCleanedHtml($doc, $container);
+        }
+
+        return $html;
+    }
 
     /**
-     * Truncate given HTML string to specified length.
-     * If length_in_chars is false it's trimmed by number
-     * of words, otherwise by number of characters.
-     *
-     * @param  string        $html
-     * @param  integer       $length
-     * @param  string|array  $opts
-     * @return string
+     * Safely truncates HTML by a given number of letters.
+     * @param  string  $html     Input HTML.
+     * @param  int     $limit    Limit to how many letters we preserve.
+     * @param  string  $ellipsis String to use as ellipsis (if any).
+     * @return string            Safe truncated HTML.
      */
-    public static function truncate($html, $length, $opts=array())
+    public static function truncateLetters($html, $limit = 0, $ellipsis = '')
     {
-        if (is_string($opts)) $opts = array('ellipsis' => $opts);
-        $opts = array_merge(static::$default_options, $opts);
-        // wrap the html in case it consists of adjacent nodes like <p>foo</p><p>bar</p>
-        $html = mb_convert_encoding("<div>".$html."</div>", 'HTML-ENTITIES', 'UTF-8');
-
-        $root_node = null;
-        // Parse using HTML5Lib if it's available.
-        if (class_exists('HTML5Lib\\Parser')) {
-            try {
-                $doc = \HTML5Lib\Parser::parse($html);
-                $root_node = $doc->documentElement->lastChild->lastChild;
-            }
-            catch (\Exception $e) {
-                ;
-            }
+        if ($limit <= 0) {
+            return $html;
         }
-        if ($root_node === null) {
-            // HTML5Lib not available so we'll have to use DOMDocument
-            // We'll only be able to parse HTML5 if it's valid XML
-            $doc = new DOMDocument('4.01', 'utf-8');
-            $doc->formatOutput = false;
-            $doc->preserveWhiteSpace = true;
-            // loadHTML will fail with HTML5 tags (article, nav, etc)
-            // so we need to suppress errors and if it fails to parse we
-            // retry with the XML parser instead
-            $prev_use_errors = libxml_use_internal_errors(true);
-            if ($doc->loadHTML($html)) {
-                $root_node = $doc->documentElement->lastChild->lastChild;
-            }
-            else if ($doc->loadXML($html)) {
-                $root_node = $doc->documentElement;
-            }
-            else {
-                libxml_use_internal_errors($prev_use_errors);
-                throw new \RuntimeException;
-            }
-            libxml_use_internal_errors($prev_use_errors);
-        }
-        list($text, $_, $opts) = static::truncateNode($doc, $root_node, $length, $opts);
 
-        $text = mb_substr(mb_substr($text, 0, -6), 5);
+        $doc = self::htmlToDomDocument($html);
+        $container = $doc->getElementsByTagName('div')->item(0);
+        $container = $container->parentNode->removeChild($container);
 
-        return $text;
-    }
+        // Iterate over letters.
+        $letters = new DOMLettersIterator($container);
+        $truncated = false;
+        foreach ($letters as $letter) {
 
-    protected static function truncateNode($doc, $node, $length, $opts)
-    {
-        if ($length === 0 && !static::ellipsable($node)) {
-            return array('', 1, $opts);
-        }
-        list($inner, $remaining, $opts) = static::innerTruncate($doc, $node, $length, $opts);
-        if (0 === mb_strlen($inner)) {
-            return array(in_array(mb_strtolower($node->nodeName), static::$self_closing_tags) ? $doc->saveXML($node) : "", $length - $remaining, $opts);
-        }
-        while($node->firstChild) {
-            $node->removeChild($node->firstChild);
-        }
-        $newNode = $doc->createDocumentFragment();
-        // handle the ampersand
-        $newNode->appendXml(static::xmlEscape($inner));
-        $node->appendChild($newNode);
-        return array($doc->saveXML($node), $length - $remaining, $opts);
-    }
+            // If we have exceeded the limit, we want to delete the remainder of this document.
+            if ($letters->key() >= $limit) {
 
-    protected static function innerTruncate($doc, $node, $length, $opts)
-    {
-        $inner = '';
-        $remaining = $length;
-        foreach($node->childNodes as $childNode) {
-            if ($childNode->nodeType === XML_ELEMENT_NODE) {
-                list($txt, $nb, $opts) = static::truncateNode($doc, $childNode, $remaining, $opts);
-            }
-            else if ($childNode->nodeType === XML_TEXT_NODE) {
-                list($txt, $nb, $opts) = static::truncateText($childNode, $remaining, $opts);
-            } else {
-                $txt = '';
-                $nb  = 0;
-            }
+                $currentText = $letters->currentTextPosition();
+                $currentText[0]->nodeValue = mb_substr($currentText[0]->nodeValue, 0, $currentText[1] + 1);
+                self::removeProceedingNodes($currentText[0], $container);
 
-            // unhandle the ampersand
-            $txt = static::xmlUnescape($txt);
-
-            $remaining -= $nb;
-            $inner .= $txt;
-            if ($remaining < 0) {
-                if (static::ellipsable($node)) {
-                    $inner = preg_replace('/(?:[\s\pP]+|(?:&(?:[a-z]+|#[0-9]+);?))*$/u', '', $inner).$opts['ellipsis'];
-                    $opts['ellipsis'] = '';
-                    $opts['was_truncated'] = true;
+                if (!empty($ellipsis)) {
+                    self::insertEllipsis($currentText[0], $ellipsis);
                 }
+
+                $truncated = true;
+
                 break;
             }
         }
-        return array($inner, $remaining, $opts);
+
+        // Return original HTML if not truncated.
+        if ($truncated) {
+            $html = self::getCleanedHtml($doc, $container);
+        }
+
+        return $html;
     }
 
-    protected static function truncateText($node, $length, $opts)
+    /**
+     * Builds a DOMDocument object from a string containing HTML.
+     * @param string $html HTML to load
+     * @returns DOMDocument Returns a DOMDocument object.
+     */
+    public static function htmlToDomDocument($html)
     {
-        $string = $node->textContent;
+        if (!$html) {
+            $html = '';
+        }
 
-        if ($opts['length_in_chars']) {
-            $count = mb_strlen($string);
-            if ($count <= $length && $length > 0) {
-                return array($string, $count, $opts);
-            }
-            if ($opts['word_safe']) {
-                if (false !== ($breakpoint = mb_strpos($string, $opts['break'], $length))) {
-                    if ($breakpoint < mb_strlen($string) - 1) {
-                        $string = mb_substr($string, 0, $breakpoint) . $opts['break'];
-                    }
+        // Transform multibyte entities which otherwise display incorrectly.
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
+        // Internal errors enabled as HTML5 not fully supported.
+        libxml_use_internal_errors(true);
+
+        // Instantiate new DOMDocument object, and then load in UTF-8 HTML.
+        $dom = new DOMDocument();
+        $dom->encoding = 'UTF-8';
+        $dom->loadHTML("<div>$html</div>");
+
+        return $dom;
+    }
+
+    /**
+     * Removes all nodes after the current node.
+     * @param  DOMNode|DOMElement $domNode
+     * @param  DOMNode|DOMElement $topNode
+     * @return void
+     */
+    private static function removeProceedingNodes($domNode, $topNode)
+    {
+        $nextNode = $domNode->nextSibling;
+
+        if ($nextNode !== null) {
+            self::removeProceedingNodes($nextNode, $topNode);
+            $domNode->parentNode->removeChild($nextNode);
+        } else {
+            //scan upwards till we find a sibling
+            $curNode = $domNode->parentNode;
+            while ($curNode !== $topNode) {
+                if ($curNode->nextSibling !== null) {
+                    $curNode = $curNode->nextSibling;
+                    self::removeProceedingNodes($curNode, $topNode);
+                    $curNode->parentNode->removeChild($curNode);
+                    break;
                 }
-                return array($string, $count, $opts);
+                $curNode = $curNode->parentNode;
             }
-            return array(mb_substr($node->textContent, 0, $length), $count, $opts);
-        }
-        else {
-            preg_match_all('/\s*\S+/', $string, $words);
-            $words = $words[0];
-            $count = count($words);
-            if ($count <= $length && $length > 0) {
-                return array($string, $count, $opts);
-            }
-            return array(implode('', array_slice($words, 0, $length)), $count, $opts);
         }
     }
 
-    protected static function ellipsable($node)
+    /**
+     * Clean extra code
+     *
+     * @param DOMDocument $doc
+     * @param $container
+     * @return string
+     */
+    private static function getCleanedHTML(DOMDocument $doc, $container)
     {
-        return ($node instanceof DOMDocument)
-        || in_array(mb_strtolower($node->nodeName), static::$ellipsable_tags)
-            ;
+        while ($doc->firstChild) {
+            $doc->removeChild($doc->firstChild);
+        }
+
+        while ($container->firstChild ) {
+            $doc->appendChild($container->firstChild);
+        }
+
+        $html = trim($doc->saveHTML());
+        return $html;
     }
 
-    protected static function xmlEscape($string)
+    /**
+     * Inserts an ellipsis
+     * @param  DOMNode|DOMElement $domNode  Element to insert after.
+     * @param  string             $ellipsis Text used to suffix our document.
+     * @return void
+     */
+    private static function insertEllipsis($domNode, $ellipsis)
     {
-        $string = str_replace('&', '&amp;', $string);
-        $string = str_replace('<?', '&lt;?', $string);
-        return $string;
+        $avoid = array('a', 'strong', 'em', 'h1', 'h2', 'h3', 'h4', 'h5'); //html tags to avoid appending the ellipsis to
+
+        if ($domNode->parentNode->parentNode !== null && in_array($domNode->parentNode->nodeName, $avoid, true)) {
+            // Append as text node to parent instead
+            $textNode = new DOMText($ellipsis);
+
+            if ($domNode->parentNode->parentNode->nextSibling) {
+                $domNode->parentNode->parentNode->insertBefore($textNode, $domNode->parentNode->parentNode->nextSibling);
+            } else {
+                $domNode->parentNode->parentNode->appendChild($textNode);
+            }
+
+        } else {
+            // Append to current node
+            $domNode->nodeValue = rtrim($domNode->nodeValue) . $ellipsis;
+        }
     }
 
-    protected static function xmlUnescape($string)
-    {
-        $string = str_replace('&amp;', '&', $string);
-        $string = str_replace('&lt;?', '<?', $string);
-        return $string;
+    /**
+     *
+     */
+    public function truncate(
+        $text,
+        $length = 100,
+        $ending = '...',
+        $exact = false,
+        $considerHtml = true
+    ) {
+        if ($considerHtml) {
+            // if the plain text is shorter than the maximum length, return the whole text
+            if (strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
+                return $text;
+            }
+            // splits all html-tags to scanable lines
+            preg_match_all('/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER);
+            $total_length = strlen($ending);
+            $open_tags = array();
+            $truncate = '';
+            foreach ($lines as $line_matchings) {
+                // if there is any html-tag in this line, handle it and add it (uncounted) to the output
+                if (!empty($line_matchings[1])) {
+                    // if it's an "empty element" with or without xhtml-conform closing slash
+                    if (preg_match('/^<(\s*.+?\/\s*|\s*(img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param)(\s.+?)?)>$/is', $line_matchings[1])) {
+                        // do nothing
+                        // if tag is a closing tag
+                    } else if (preg_match('/^<\s*\/([^\s]+?)\s*>$/s', $line_matchings[1], $tag_matchings)) {
+                        // delete tag from $open_tags list
+                        $pos = array_search($tag_matchings[1], $open_tags);
+                        if ($pos !== false) {
+                            unset($open_tags[$pos]);
+                        }
+                        // if tag is an opening tag
+                    } else if (preg_match('/^<\s*([^\s>!]+).*?>$/s', $line_matchings[1], $tag_matchings)) {
+                        // add tag to the beginning of $open_tags list
+                        array_unshift($open_tags, strtolower($tag_matchings[1]));
+                    }
+                    // add html-tag to $truncate'd text
+                    $truncate .= $line_matchings[1];
+                }
+                // calculate the length of the plain text part of the line; handle entities as one character
+                $content_length = strlen(preg_replace('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', ' ', $line_matchings[2]));
+                if ($total_length+$content_length> $length) {
+                    // the number of characters which are left
+                    $left = $length - $total_length;
+                    $entities_length = 0;
+                    // search for html entities
+                    if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', $line_matchings[2], $entities, PREG_OFFSET_CAPTURE)) {
+                        // calculate the real length of all entities in the legal range
+                        foreach ($entities[0] as $entity) {
+                            if ($entity[1]+1-$entities_length <= $left) {
+                                $left--;
+                                $entities_length += strlen($entity[0]);
+                            } else {
+                                // no more characters left
+                                break;
+                            }
+                        }
+                    }
+                    $truncate .= substr($line_matchings[2], 0, $left+$entities_length);
+                    // maximum lenght is reached, so get off the loop
+                    break;
+                } else {
+                    $truncate .= $line_matchings[2];
+                    $total_length += $content_length;
+                }
+                // if the maximum length is reached, get off the loop
+                if($total_length>= $length) {
+                    break;
+                }
+            }
+        } else {
+            if (strlen($text) <= $length) {
+                return $text;
+            } else {
+                $truncate = substr($text, 0, $length - strlen($ending));
+            }
+        }
+        // if the words shouldn't be cut in the middle...
+        if (!$exact) {
+            // ...search the last occurance of a space...
+            $spacepos = strrpos($truncate, ' ');
+            if (isset($spacepos)) {
+                // ...and cut the text in this position
+                $truncate = substr($truncate, 0, $spacepos);
+            }
+        }
+        // add the defined ending to the text
+        $truncate .= $ending;
+        if($considerHtml) {
+            // close all unclosed html-tags
+            foreach ($open_tags as $tag) {
+                $truncate .= '</' . $tag . '>';
+            }
+        }
+        return $truncate;
     }
+
 }

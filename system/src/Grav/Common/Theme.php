@@ -1,17 +1,20 @@
 <?php
+
+/**
+ * @package    Grav\Common
+ *
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
+ */
+
 namespace Grav\Common;
 
+use Grav\Common\Page\Interfaces\PageInterface;
 use Grav\Common\Config\Config;
 use RocketTheme\Toolbox\File\YamlFile;
 
-/**
- * Class Theme
- * @package Grav\Common
- */
 class Theme extends Plugin
 {
-    public $name;
-
     /**
      * Constructor.
      *
@@ -21,9 +24,17 @@ class Theme extends Plugin
      */
     public function __construct(Grav $grav, Config $config, $name)
     {
-        $this->name = $name;
-
         parent::__construct($name, $grav, $config);
+    }
+
+    /**
+     * Get configuration of the plugin.
+     *
+     * @return Config
+     */
+    public function config()
+    {
+        return $this->config["themes.{$this->name}"];
     }
 
     /**
@@ -39,13 +50,47 @@ class Theme extends Plugin
             return false;
         }
 
-        $locator = Grav::instance()['locator'];
+        $grav = Grav::instance();
+        $locator = $grav['locator'];
         $filename = 'config://themes/' . $theme_name . '.yaml';
         $file = YamlFile::instance($locator->findResource($filename, true, true));
-        $content = Grav::instance()['config']->get('themes.' . $theme_name);
+        $content = $grav['config']->get('themes.' . $theme_name);
         $file->save($content);
         $file->free();
 
         return true;
+    }
+
+    /**
+     * Override the mergeConfig method to work for themes
+     */
+    protected function mergeConfig(PageInterface $page, $deep = 'merge', $params = [], $type = 'themes')
+    {
+        return parent::mergeConfig($page, $deep, $params, $type);
+    }
+
+    /**
+     * Simpler getter for the theme blueprint
+     *
+     * @return mixed
+     */
+    public function getBlueprint()
+    {
+        if (!$this->blueprint) {
+            $this->loadBlueprint();
+        }
+        return $this->blueprint;
+    }
+
+    /**
+     * Load blueprints.
+     */
+    protected function loadBlueprint()
+    {
+        if (!$this->blueprint) {
+            $grav = Grav::instance();
+            $themes = $grav['themes'];
+            $this->blueprint = $themes->get($this->name)->blueprints();
+        }
     }
 }

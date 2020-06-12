@@ -1,23 +1,18 @@
 <?php
+
+/**
+ * @package    Grav\Common\Config
+ *
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
+ */
+
 namespace Grav\Common\Config;
 
 use Grav\Common\File\CompiledYamlFile;
 
-/**
- * The Compiled Configuration class.
- */
 class CompiledConfig extends CompiledBase
 {
-    /**
-     * @var int Version number for the compiled file.
-     */
-    public $version = 1;
-
-    /**
-     * @var Config  Configuration object.
-     */
-    protected $object;
-
     /**
      * @var callable  Blueprints loader.
      */
@@ -27,6 +22,13 @@ class CompiledConfig extends CompiledBase
      * @var bool
      */
     protected $withDefaults;
+
+    public function __construct($cacheFolder, array $files, $path)
+    {
+        parent::__construct($cacheFolder, $files, $path);
+
+        $this->version = 1;
+    }
 
     /**
      * Set blueprints for the configuration.
@@ -59,7 +61,7 @@ class CompiledConfig extends CompiledBase
      */
     protected function createObject(array $data = [])
     {
-        if ($this->withDefaults && empty($data) && is_callable($this->callable)) {
+        if ($this->withDefaults && empty($data) && \is_callable($this->callable)) {
             $blueprints = $this->callable;
             $data = $blueprints()->getDefaults();
         }
@@ -73,6 +75,7 @@ class CompiledConfig extends CompiledBase
     protected function finalizeObject()
     {
         $this->object->checksum($this->checksum());
+        $this->object->timestamp($this->timestamp());
     }
 
     /**

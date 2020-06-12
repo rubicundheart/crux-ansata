@@ -1,23 +1,27 @@
 <?php
-namespace Grav\Common\Twig;
-
-use Grav\Common\GravTrait;
 
 /**
- * A trait to add some custom processing to the identifyLink() method in Parsedown and ParsedownExtra
+ * @package    Grav\Common\Twig
+ *
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
  */
+
+namespace Grav\Common\Twig;
+
+use Grav\Common\Filesystem\Folder;
+use Grav\Common\Grav;
+
 trait WriteCacheFileTrait
 {
-    use GravTrait;
-
     protected static $umask;
 
     /**
      * This exists so template cache files use the same
      * group between apache and cli
      *
-     * @param $file
-     * @param $content
+     * @param string $file
+     * @param string $content
      */
     protected function writeCacheFile($file, $content)
     {
@@ -26,13 +30,14 @@ trait WriteCacheFileTrait
         }
 
         if (!isset(self::$umask)) {
-            self::$umask = self::getGrav()['config']->get('system.twig.umask_fix', false);
+            self::$umask = Grav::instance()['config']->get('system.twig.umask_fix', false);
         }
 
         if (self::$umask) {
-            if (!is_dir(dirname($file))) {
+            $dir = dirname($file);
+            if (!is_dir($dir)) {
                 $old = umask(0002);
-                mkdir(dirname($file), 0777, true);
+                Folder::create($dir);
                 umask($old);
             }
             parent::writeCacheFile($file, $content);

@@ -1,13 +1,14 @@
 <?php
-namespace Grav\Common\Twig;
 
 /**
- * The Twig Environment class is a wrapper that handles configurable permissions
- * for the Twig cache files
+ * @package    Grav\Common\Twig
  *
- * @author RocketTheme
- * @license MIT
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
  */
+
+namespace Grav\Common\Twig;
+
 class TwigEnvironment extends \Twig_Environment
 {
     use WriteCacheFileTrait;

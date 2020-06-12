@@ -1,13 +1,18 @@
 <?php
-namespace Grav\Common;
 
 /**
- * Handles browser and platform versions
+ * @package    Grav\Common
  *
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
+ */
+
+namespace Grav\Common;
+
+use function donatj\UserAgent\parse_user_agent;
+
+/**
  * Internally uses the PhpUserAgent package https://github.com/donatj/PhpUserAgent
- *
- * @author  RocketTheme
- * @license MIT
  */
 class Browser
 {
@@ -111,7 +116,7 @@ class Browser
     {
         $version = explode('.', $this->getLongVersion());
 
-        return intval($version[0]);
+        return (int)$version[0];
     }
 
     /**
@@ -131,5 +136,16 @@ class Browser
         }
 
         return true;
+    }
+    
+    /**
+     * Determine if “Do Not Track” is set by browser
+     * @see https://www.w3.org/TR/tracking-dnt/
+     *
+     * @return bool
+     */
+    public function isTrackable(): bool
+    {
+        return !(isset($_SERVER['HTTP_DNT']) && $_SERVER['HTTP_DNT'] === '1');
     }
 }
