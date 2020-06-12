@@ -1,3 +1,42 @@
+# v1.6.2
+## 05/09/2019
+
+1. [](#new)
+    * Fixed a few issues found by phpstan
+    * Added `ru` and `uk` translations [#36](https://github.com/getgrav/grav-plugin-error/pull/36)
+
+# v1.6.1
+## 03/09/2018
+
+1. [](#improved)
+    * Added Polish + Catalan translation
+    * Updated `README.md` to reference custom error pages
+
+# v1.6.0
+## 10/19/2016
+
+1. [](#improved)
+    * Added Croatian translation
+    * Improved `autoescape: true` support
+1. [](#bugfix)
+    * Fixed issue where template file for `error` page type is only available if page was not found
+
+# v1.5.1
+## 07/18/2016
+
+1. [](#improved)
+    * Added chinese and german translations
+1. [](#bugfix)
+    * Fixed issue with the Smartypants plugin running before Twig was processed
+
+# v1.5.0
+## 07/14/2015
+
+1. [](#improved)
+    * Translate some blueprint configuration options
+    * Allow translating the error message
+    * Added french, russian, romanian, danish, italian
+
 # v1.4.1
 ## 12/11/2015
 

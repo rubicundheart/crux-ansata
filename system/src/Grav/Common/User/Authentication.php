@@ -1,12 +1,14 @@
 <?php
-namespace Grav\Common\User;
 
 /**
- * User authentication
+ * @package    Grav\Common\User
  *
- * @author  RocketTheme
- * @license MIT
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
  */
+
+namespace Grav\Common\User;
+
 abstract class Authentication
 {
     /**
@@ -15,9 +17,9 @@ abstract class Authentication
      * @param string $password Plaintext password.
      *
      * @throws \RuntimeException
-     * @return string|bool
+     * @return string
      */
-    public static function create($password)
+    public static function create($password): string
     {
         if (!$password) {
             throw new \RuntimeException('Password hashing failed: no password provided.');
@@ -40,7 +42,7 @@ abstract class Authentication
      *
      * @return int              Returns 0 if the check fails, 1 if password matches, 2 if hash needs to be updated.
      */
-    public static function verify($password, $hash)
+    public static function verify($password, $hash): int
     {
         // Fail if hash doesn't match
         if (!$password || !$hash || !password_verify($password, $hash)) {

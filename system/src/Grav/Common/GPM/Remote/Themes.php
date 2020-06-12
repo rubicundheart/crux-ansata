@@ -1,10 +1,14 @@
 <?php
-namespace Grav\Common\GPM\Remote;
 
 /**
- * Class Themes
- * @package Grav\Common\GPM\Remote
+ * @package    Grav\Common\GPM
+ *
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
  */
+
+namespace Grav\Common\GPM\Remote;
+
 class Themes extends AbstractPackageCollection
 {
     /**

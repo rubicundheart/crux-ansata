@@ -1,17 +1,19 @@
 <?php
+
+/**
+ * @package    Grav\Common\GPM
+ *
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
+ */
+
 namespace Grav\Common\GPM;
 
 use Grav\Common\Utils;
-use Grav\Common\GravTrait;
+use Grav\Common\Grav;
 
-/**
- * Class Response
- * @package Grav\Common\GPM
- */
 class Response
 {
-    use GravTrait;
-
     /**
      * The callback for the progress
      *
@@ -38,8 +40,10 @@ class Response
             CURLOPT_USERAGENT      => 'Grav GPM',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_FAILONERROR    => true,
             CURLOPT_TIMEOUT        => 15,
             CURLOPT_HEADER         => false,
+            //CURLOPT_SSL_VERIFYPEER => true, // this is set in the constructor since it's a setting
             /**
              * Example of callback parameters from within your own class
              */
@@ -47,11 +51,17 @@ class Response
             //CURLOPT_PROGRESSFUNCTION => [$this, 'progress']
         ],
         'fopen' => [
-            'method'          => 'GET',
-            'user_agent'      => 'Grav GPM',
-            'max_redirects'   => 5,
-            'follow_location' => 1,
-            'timeout'         => 15,
+            'method'           => 'GET',
+            'user_agent'       => 'Grav GPM',
+            'max_redirects'    => 5,
+            'follow_location'  => 1,
+            'timeout'          => 15,
+            /* // this is set in the constructor since it's a setting
+            'ssl'              => [
+                'verify_peer'      => true,
+                'verify_peer_name' => true,
+            ],
+            */
             /**
              * Example of callback parameters from within your own class
              */
@@ -68,7 +78,7 @@ class Response
      */
     public static function setMethod($method = 'auto')
     {
-        if (!in_array($method, ['auto', 'curl', 'fopen'])) {
+        if (!\in_array($method, ['auto', 'curl', 'fopen'], true)) {
             $method = 'auto';
         }
 
@@ -94,14 +104,77 @@ class Response
 
         // check if this function is available, if so use it to stop any timeouts
         try {
-            if (!Utils::isFunctionDisabled('set_time_limit') && !ini_get('safe_mode') && function_exists('set_time_limit')) {
+            if (function_exists('set_time_limit') && !Utils::isFunctionDisabled('set_time_limit')) {
                 set_time_limit(0);
             }
         } catch (\Exception $e) {
         }
 
-        $options = array_replace_recursive(self::$defaults, $options);
-        $method  = 'get' . ucfirst(strtolower(self::$method));
+        $config = Grav::instance()['config'];
+        $overrides = [];
+
+        // Override CA Bundle
+        $caPathOrFile = \Composer\CaBundle\CaBundle::getSystemCaRootBundlePath();
+        if (is_dir($caPathOrFile) || (is_link($caPathOrFile) && is_dir(readlink($caPathOrFile)))) {
+            $overrides['curl'][CURLOPT_CAPATH] = $caPathOrFile;
+            $overrides['fopen']['ssl']['capath'] = $caPathOrFile;
+        } else {
+            $overrides['curl'][CURLOPT_CAINFO] = $caPathOrFile;
+            $overrides['fopen']['ssl']['cafile'] = $caPathOrFile;
+        }
+
+        // SSL Verify Peer and Proxy Setting
+        $settings = [
+            'method'      => $config->get('system.gpm.method', self::$method),
+            'verify_peer' => $config->get('system.gpm.verify_peer', true),
+            // `system.proxy_url` is for fallback
+            // introduced with 1.1.0-beta.1 probably safe to remove at some point
+            'proxy_url'   => $config->get('system.gpm.proxy_url', $config->get('system.proxy_url', false)),
+        ];
+
+        if (!$settings['verify_peer']) {
+            $overrides = array_replace_recursive([], $overrides, [
+                'curl' => [
+                    CURLOPT_SSL_VERIFYPEER => $settings['verify_peer']
+                ],
+                'fopen' => [
+                    'ssl' => [
+                        'verify_peer' => $settings['verify_peer'],
+                        'verify_peer_name' => $settings['verify_peer'],
+                    ]
+                ]
+            ]);
+        }
+
+        // Proxy Setting
+        if ($settings['proxy_url']) {
+            $proxy = parse_url($settings['proxy_url']);
+            $fopen_proxy = ($proxy['scheme'] ?: 'http') . '://' . $proxy['host'] . (isset($proxy['port']) ? ':' . $proxy['port'] : '');
+
+            $overrides = array_replace_recursive([], $overrides, [
+                'curl' => [
+                    CURLOPT_PROXY => $proxy['host'],
+                    CURLOPT_PROXYTYPE => 'HTTP'
+                ],
+                'fopen' => [
+                    'proxy'           => $fopen_proxy,
+                    'request_fulluri' => true
+                ]
+            ]);
+
+            if (isset($proxy['port'])) {
+                $overrides['curl'][CURLOPT_PROXYPORT] = $proxy['port'];
+            }
+
+            if (isset($proxy['user'], $proxy['pass'])) {
+                $fopen_auth = $auth = base64_encode($proxy['user'] . ':' . $proxy['pass']);
+                $overrides['curl'][CURLOPT_PROXYUSERPWD] = $proxy['user'] . ':' . $proxy['pass'];
+                $overrides['fopen']['header'] = "Proxy-Authorization: Basic $fopen_auth";
+            }
+        }
+
+        $options = array_replace_recursive(self::$defaults, $options, $overrides);
+        $method  = 'get' . ucfirst(strtolower($settings['method']));
 
         self::$callback = $callback;
         return static::$method($uri, $options, $callback);
@@ -110,7 +183,7 @@ class Response
     /**
      * Checks if cURL is available
      *
-     * @return boolean
+     * @return bool
      */
     public static function isCurlAvailable()
     {
@@ -120,7 +193,7 @@ class Response
     /**
      * Checks if the remote fopen request is enabled in PHP
      *
-     * @return boolean
+     * @return bool
      */
     public static function isFopenAvailable()
     {
@@ -128,18 +201,26 @@ class Response
     }
 
     /**
-     * Progress normalized for cURL and Fopen
-     * Accepts a vsariable length of arguments passed in by stream method
+     * Is this a remote file or not
      *
-     * @return array Normalized array with useful data.
-     *               Format: ['code' => int|false, 'filesize' => bytes, 'transferred' => bytes, 'percent' => int]
+     * @param string $file
+     * @return bool
+     */
+    public static function isRemote($file)
+    {
+        return (bool) filter_var($file, FILTER_VALIDATE_URL);
+    }
+
+    /**
+     * Progress normalized for cURL and Fopen
+     * Accepts a variable length of arguments passed in by stream method
      */
     public static function progress()
     {
         static $filesize = null;
 
         $args           = func_get_args();
-        $isCurlResource = is_resource($args[0]) && get_resource_type($args[0]) == 'curl';
+        $isCurlResource = is_resource($args[0]) && get_resource_type($args[0]) === 'curl';
 
         $notification_code = !$isCurlResource ? $args[0] : false;
         $bytes_transferred = $isCurlResource ? $args[2] : $args[4];
@@ -161,7 +242,7 @@ class Response
                 ];
 
                 if (self::$callback !== null) {
-                    call_user_func_array(self::$callback, [$progress]);
+                    call_user_func(self::$callback, $progress);
                 }
             }
         }
@@ -181,6 +262,8 @@ class Response
         if (self::isCurlAvailable()) {
             return self::getCurl(func_get_args());
         }
+
+        return null;
     }
 
     /**
@@ -190,29 +273,48 @@ class Response
      */
     private static function getFopen()
     {
-        if (count($args = func_get_args()) == 1) {
+        if (\count($args = func_get_args()) === 1) {
             $args = $args[0];
         }
 
         $uri      = $args[0];
-        $options  = $args[1];
-        $callback = $args[2];
-
-        // if proxy set add that
-        $proxy_url = self::getGrav()['config']->get('system.proxy_url');
-        if ($proxy_url) {
-            $options['fopen']['proxy'] = $proxy_url;
-        }
+        $options  = $args[1] ?? [];
+        $callback = $args[2] ?? null;
 
         if ($callback) {
             $options['fopen']['notification'] = ['self', 'progress'];
         }
 
-        $stream  = stream_context_create(['http' => $options['fopen']], $options['fopen']);
+        if (isset($options['fopen']['ssl'])) {
+            $ssl = $options['fopen']['ssl'];
+            unset($options['fopen']['ssl']);
+
+            $stream  = stream_context_create([
+                'http' => $options['fopen'],
+                'ssl' => $ssl
+            ], $options['fopen']);
+        } else {
+            $stream  = stream_context_create(['http' => $options['fopen']], $options['fopen']);
+        }
+
+
         $content = @file_get_contents($uri, false, $stream);
 
         if ($content === false) {
-            throw new \RuntimeException("Error while trying to download '$uri'");
+            $code = null;
+            // Function file_get_contents() creates local variable $http_response_header, check it
+            if (isset($http_response_header)) {
+                $code = explode(' ', $http_response_header[0] ?? '')[1] ?? null;
+            }
+
+            switch ($code) {
+                case '404':
+                    throw new \RuntimeException('Page not found');
+                case '401':
+                    throw new \RuntimeException('Invalid LICENSE');
+                default:
+                    throw new \RuntimeException("Error while trying to download (code: {$code}): {$uri}\n");
+            }
         }
 
         return $content;
@@ -229,8 +331,8 @@ class Response
         $args = count($args) > 1 ? $args : array_shift($args);
 
         $uri      = $args[0];
-        $options  = $args[1];
-        $callback = $args[2];
+        $options  = $args[1] ?? [];
+        $callback = $args[2] ?? null;
 
         $ch = curl_init($uri);
 
@@ -238,8 +340,17 @@ class Response
         $errno = curl_errno($ch);
 
         if ($errno) {
-            $error_message = curl_strerror($errno);
-            throw new \RuntimeException("cURL error ({$errno}):\n {$error_message}");
+            $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error_message = curl_strerror($errno) . "\n" . curl_error($ch);
+
+            switch ($code) {
+                case '404':
+                    throw new \RuntimeException('Page not found');
+                case '401':
+                    throw new \RuntimeException('Invalid LICENSE');
+                default:
+                    throw new \RuntimeException("Error while trying to download (code: $code): $uri \nMessage: $error_message");
+            }
         }
 
         curl_close($ch);
@@ -248,9 +359,9 @@ class Response
     }
 
     /**
-     * @param $ch
-     * @param $options
-     * @param $callback
+     * @param resource $ch
+     * @param array $options
+     * @param bool $callback
      *
      * @return bool|mixed
      */
@@ -266,19 +377,13 @@ class Response
             );
         }
 
-        // if proxy set add that
-        $proxy_url = self::getGrav()['config']->get('system.proxy_url');
-        if ($proxy_url) {
-            $options['curl'][CURLOPT_PROXY] = $proxy_url;
-        }
-
         // no open_basedir set, we can proceed normally
         if (!ini_get('open_basedir')) {
             curl_setopt_array($ch, $options['curl']);
             return curl_exec($ch);
         }
 
-        $max_redirects                           = isset($options['curl'][CURLOPT_MAXREDIRS]) ? $options['curl'][CURLOPT_MAXREDIRS] : 3;
+        $max_redirects = $options['curl'][CURLOPT_MAXREDIRS] ?? 5;
         $options['curl'][CURLOPT_FOLLOWLOCATION] = false;
 
         // open_basedir set but no redirects to follow, we can disable followlocation and proceed normally
@@ -302,9 +407,9 @@ class Response
             if (curl_errno($rch)) {
                 $code = 0;
             } else {
-                $code = curl_getinfo($rch, CURLINFO_HTTP_CODE);
-                if ($code == 301 || $code == 302) {
-                    preg_match('/Location:(.*?)\n/', $header, $matches);
+                $code = (int)curl_getinfo($rch, CURLINFO_HTTP_CODE);
+                if ($code === 301 || $code === 302 || $code === 303) {
+                    preg_match('/(?:^|\n)Location:(.*?)\n/i', $header, $matches);
                     $uri = trim(array_pop($matches));
                 } else {
                     $code = 0;

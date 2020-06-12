@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * @package    Grav\Common\Page
+ *
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
+ */
+
 namespace Grav\Common\Page\Medium;
 
 class ThumbnailImageMedium extends ImageMedium
@@ -9,7 +17,7 @@ class ThumbnailImageMedium extends ImageMedium
     public $parent = null;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $linked = false;
 
@@ -27,15 +35,16 @@ class ThumbnailImageMedium extends ImageMedium
     /**
      * Get an element (is array) that can be rendered by the Parsedown engine
      *
-     * @param  string  $title
-     * @param  string  $alt
-     * @param  string  $class
-     * @param  boolean $reset
+     * @param  string $title
+     * @param  string $alt
+     * @param  string $class
+     * @param  string $id
+     * @param  bool $reset
      * @return array
      */
-    public function parsedownElement($title = null, $alt = null, $class = null, $reset = true)
+    public function parsedownElement($title = null, $alt = null, $class = null, $id = null, $reset = true)
     {
-        return $this->bubble('parsedownElement', [$title, $alt, $class, $reset]);
+        return $this->bubble('parsedownElement', [$title, $alt, $class, $id, $reset]);
     }
 
     /**
@@ -44,12 +53,13 @@ class ThumbnailImageMedium extends ImageMedium
      * @param string $title
      * @param string $alt
      * @param string $class
+     * @param string $id
      * @param bool $reset
      * @return string
      */
-    public function html($title = null, $alt = null, $class = null, $reset = true)
+    public function html($title = null, $alt = null, $class = null, $id = null, $reset = true)
     {
-        return $this->bubble('html', [$title, $alt, $class, $reset]);
+        return $this->bubble('html', [$title, $alt, $class, $id, $reset]);
     }
 
     /**
@@ -74,13 +84,14 @@ class ThumbnailImageMedium extends ImageMedium
     public function thumbnail($type = 'auto')
     {
         $this->bubble('thumbnail', [$type], false);
+
         return $this->bubble('getThumbnail', [], false);
     }
 
     /**
      * Turn the current Medium into a Link
      *
-     * @param  boolean $reset
+     * @param  bool $reset
      * @param  array  $attributes
      * @return Link
      */
@@ -94,7 +105,7 @@ class ThumbnailImageMedium extends ImageMedium
      *
      * @param  int  $width
      * @param  int  $height
-     * @param  boolean $reset
+     * @param  bool $reset
      * @return Link
      */
     public function lightbox($width = null, $height = null, $reset = true)
@@ -107,15 +118,15 @@ class ThumbnailImageMedium extends ImageMedium
      *
      * @param  string  $method
      * @param  array  $arguments
-     * @param  boolean $testLinked
+     * @param  bool $testLinked
      * @return Medium
      */
     protected function bubble($method, array $arguments = [], $testLinked = true)
     {
         if (!$testLinked || $this->linked) {
             return $this->parent ? call_user_func_array(array($this->parent, $method), $arguments) : $this;
-        } else {
-            return call_user_func_array(array($this, 'parent::' . $method), $arguments);
         }
+
+        return call_user_func_array(array($this, 'parent::' . $method), $arguments);
     }
 }

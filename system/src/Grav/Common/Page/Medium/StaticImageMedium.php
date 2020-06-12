@@ -1,13 +1,14 @@
 <?php
-namespace Grav\Common\Page\Medium;
 
 /**
- * The Image medium holds information related to an individual image. These are then stored in the Media object.
+ * @package    Grav\Common\Page
  *
- * @author Grav
- * @license MIT
- *
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
  */
+
+namespace Grav\Common\Page\Medium;
+
 class StaticImageMedium extends Medium
 {
     use StaticResizeTrait;
@@ -16,13 +17,13 @@ class StaticImageMedium extends Medium
      * Parsedown element for source display mode
      *
      * @param  array $attributes
-     * @param  boolean $reset
+     * @param  bool $reset
      * @return array
      */
     protected function sourceParsedownElement(array $attributes, $reset = true)
     {
         empty($attributes['src']) && $attributes['src'] = $this->url($reset);
 
-        return [ 'name' => 'image', 'attributes' => $attributes ];
+        return ['name' => 'img', 'attributes' => $attributes];
     }
 }

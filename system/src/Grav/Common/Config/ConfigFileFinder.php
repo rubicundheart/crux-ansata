@@ -1,11 +1,16 @@
 <?php
+
+/**
+ * @package    Grav\Common\Config
+ *
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
+ */
+
 namespace Grav\Common\Config;
 
 use Grav\Common\Filesystem\Folder;
 
-/**
- * The Configuration & Blueprints Finder class.
- */
 class ConfigFileFinder
 {
     protected $base = '';
@@ -203,7 +208,7 @@ class ConfigFileFinder
                     continue;
                 }
 
-                $name = $directory->getBasename();
+                $name = $directory->getFilename();
                 $find = ($lookup ?: $name) . '.yaml';
                 $filename = "{$path}/{$name}/{$find}";
 

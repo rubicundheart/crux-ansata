@@ -1,16 +1,7 @@
-title: Crux Ansata Oasis
+title: Grav
 author:
-  name: Amber Peter
+  name: Joe Bloggs
+  email: 'joe@example.com'
 metadata:
-    description: Crux Ansata Oasis is a local chapter of the Ordo Templi Orientis (OTO), located in the Valley of Denver, Colorado. As an Oasis we strive to provide the people within and without our valley with dramatic group rituals, classes and workshops, and a model of behavior expressing individual light, life, love, and liberty.
+    description: 'Grav is an easy to use, yet powerful, open source flat-file CMS'
 
-# Header customization
-header:
-  title: Crux Ansata Oasis
-  description: <span>Ordo Templi Orientis</span> in the Valley of <span>Denver, Colorado</span><br><br>Do what thou wilt shall be the whole of the Law.<br>Love is the law, love under will.
-copyright:
-    - line: &copy; Copyright 2017 Crux Ansata
-    - line: Design by <a title="Styleshout" href="http://www.styleshout.com/">Styleshout</a>
-social:
-- url: "https://www.facebook.com/CruxAnsataOTO/"
-  icon: facebook

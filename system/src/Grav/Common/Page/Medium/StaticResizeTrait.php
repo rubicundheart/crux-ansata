@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * @package    Grav\Common\Page
+ *
+ * @copyright  Copyright (C) 2015 - 2019 Trilby Media, LLC. All rights reserved.
+ * @license    MIT License; see LICENSE file for details.
+ */
+
 namespace Grav\Common\Page\Medium;
 
 trait StaticResizeTrait
@@ -8,7 +16,7 @@ trait StaticResizeTrait
      *
      * @param  int $width
      * @param  int $height
-     * @return Medium
+     * @return $this
      */
     public function resize($width = null, $height = null)
     {
